@@ -1,0 +1,5 @@
+# Hide secrets
+keys/
+
+# Avoid Large files
+terraform/.terraform
