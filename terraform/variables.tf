@@ -7,17 +7,12 @@ variable "project_id" {
 variable "region" {
   description = "Google Cloud Region"
   type        = string
-  default     = "eu-west1"
+  default     = "EU-WEST2"
 }
 
 variable "credentials" {
   description = "my gcp credentials"
   default     = "../keys/gcp-sa-key.json" 
-}
-
-variable "gcs_bucket_name" {
-  description = "name of the gcp bucket storing raw data from GDELT"
-  default = "gdelt-lakehouse-bucket"
 }
 
 variable "location" {
@@ -34,5 +29,5 @@ variable "bq_dataset_name" {
 
 variable "gcs_storage_class" {
   description = "Bucket Storage Class"
-  default     = "STANDARD"
+  default     = "REGIONAL"
 }

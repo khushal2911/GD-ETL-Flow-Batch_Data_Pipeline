@@ -1,0 +1,33 @@
+id: gcp_kv
+namespace: newslakehouse
+
+tasks:
+  - id: gcp_project_id
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_PROJECT_ID
+    kvType: STRING
+    value: newslakehouse 
+
+  - id: gcp_location
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_LOCATION
+    kvType: STRING
+    value: europe-west2
+
+  - id: gcp_raw_bucket_name
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_RAW_BUCKET_NAME
+    kvType: STRING
+    value: newslakehouse-gdelt-raw # TODO make sure it's globally unique!
+  
+  - id: gcp_processed_bucket_name
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_PROCESSED_BUCKET_NAME
+    kvType: STRING
+    value: newslakehouse-gdelt-processed # TODO make sure it's globally unique!
+
+  - id: gcp_dataset
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_DATASET
+    kvType: STRING
+    value: newslakehouse_dataset
