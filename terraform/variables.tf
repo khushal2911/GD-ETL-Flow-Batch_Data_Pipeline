@@ -29,5 +29,5 @@ variable "bq_dataset_name" {
 
 variable "gcs_storage_class" {
   description = "Bucket Storage Class"
-  default     = "REGIONAL"
+  default     = "STANDARD"
 }

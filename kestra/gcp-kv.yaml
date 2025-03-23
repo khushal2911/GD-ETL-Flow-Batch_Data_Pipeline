@@ -16,16 +16,10 @@ tasks:
 
   - id: gcp_raw_bucket_name
     type: io.kestra.plugin.core.kv.Set
-    key: GCP_RAW_BUCKET_NAME
+    key: GCP_BUCKET_NAME
     kvType: STRING
-    value: newslakehouse-gdelt-raw # TODO make sure it's globally unique!
+    value: newslakehouse-gdelt # TODO make sure it's globally unique!
   
-  - id: gcp_processed_bucket_name
-    type: io.kestra.plugin.core.kv.Set
-    key: GCP_PROCESSED_BUCKET_NAME
-    kvType: STRING
-    value: newslakehouse-gdelt-processed # TODO make sure it's globally unique!
-
   - id: gcp_dataset
     type: io.kestra.plugin.core.kv.Set
     key: GCP_DATASET

@@ -14,15 +14,8 @@ provider "google" {
 }
 
 # Storing extracted datasets from source
-resource "google_storage_bucket" "gdelt_raw" {
-  name          = "${var.project_id}-gdelt-raw"
-  location      = var.location
-  storage_class = var.gcs_storage_class
-}
-
-# Storing datasets processed with spark
-resource "google_storage_bucket" "gdelt_processed" {
-  name          = "${var.project_id}-gdelt-processed"
+resource "google_storage_bucket" "gdelt_bucket" {
+  name          = "${var.project_id}-gdelt-bucket"
   location      = var.location
   storage_class = var.gcs_storage_class
 }
