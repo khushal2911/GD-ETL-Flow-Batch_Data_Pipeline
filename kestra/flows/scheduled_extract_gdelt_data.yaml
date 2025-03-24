@@ -1,7 +1,7 @@
-id: download_data_files
+id: scheduled_extract_gdelt_data
 namespace: newslakehouse
 description: |
-  The flow to extract files into GCS bucket from data source GDELT URL "http://data.gdeltproject.org/gdeltv2"
+  The flow to schedule extraction of files into GCS bucket from data source GDELT URL "http://data.gdeltproject.org/gdeltv2/"
 
 inputs:
   - id: filetype
@@ -10,30 +10,11 @@ inputs:
     values: [export, mentions]
     defaults: export
 
-  - id: year
-    type: SELECT
-    displayName: Select year
-    values: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
-    defaults: "2025"
-    allowCustomValue: false
-
-  - id: month
-    type: SELECT
-    displayName: Select month
-    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
-    defaults: "01"
-
-  - id: day
-    type: SELECT
-    displayName: Select day
-    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
-    defaults: "01"
-
 
 variables:
-  file: "{{inputs.year}}{{inputs.month}}{{inputs.day}}000000.{{inputs.filetype}}.CSV"
+  file: "{{trigger.date | date('yyyyMMddHHmmss')}}.{{inputs.filetype}}.CSV"
   gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/{{vars.file}}"
-  data: "{{outputs.extract.outputFiles[inputs.year ~ inputs.month ~ inputs.day ~ '000000.' ~ inputs.filetype ~ '.CSV']}}" # Hardcoded for midnight only 
+  data: "{{outputs.extract.outputFiles[(trigger.date | date('yyyyMMddHHmmss')) ~ '.' ~ inputs.filetype ~ '.CSV']}}" # Hardcoded for midnight only 
 
 tasks:
   - id: set_label
@@ -67,3 +48,16 @@ pluginDefaults:
       projectId: "{{kv('GCP_PROJECT_ID')}}"
       location: "{{kv('GCP_LOCATION')}}"
       bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: export_files_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/15 * 1 * *" # Every 15mins on 1st day of every month
+    inputs:
+      filetype: export
+
+  - id: mentions_files_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/15 * 1 * *" # Every 15mins on 1st day of every month
+    inputs:
+      filetype: mentions
