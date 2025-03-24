@@ -1,12 +1,12 @@
-id: gcp_kv
+id: gcp-kv
 namespace: newslakehouse
-
+# create GCP_CREDS kv on UI
 tasks:
   - id: gcp_project_id
     type: io.kestra.plugin.core.kv.Set
     key: GCP_PROJECT_ID
     kvType: STRING
-    value: newslakehouse 
+    value: newslakehouse
 
   - id: gcp_location
     type: io.kestra.plugin.core.kv.Set
@@ -14,14 +14,14 @@ tasks:
     kvType: STRING
     value: europe-west2
 
-  - id: gcp_raw_bucket_name
+  - id: gcp_bucket_name
     type: io.kestra.plugin.core.kv.Set
     key: GCP_BUCKET_NAME
     kvType: STRING
-    value: newslakehouse-gdelt # TODO make sure it's globally unique!
-  
+    value: newslakehouse-gdelt-bucket
+
   - id: gcp_dataset
     type: io.kestra.plugin.core.kv.Set
     key: GCP_DATASET
     kvType: STRING
-    value: newslakehouse_dataset
+    value: newslaekhouse_dataset

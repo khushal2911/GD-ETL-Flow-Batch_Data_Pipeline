@@ -6,8 +6,11 @@ volumes:
 
 services:
   kestra:
-    image: kestra/kestra:v0.20.7
+    image: kestra/kestra:latest
     pull_policy: always
+    # Note that this setup with a root user is intended for development purpose.
+    # Our base image runs without root, but the Docker Compose implementation needs root to access the Docker socket
+    # To run Kestra in a rootless mode in production, see: https://kestra.io/docs/installation/podman-compose
     user: "root"
     command: server standalone
     volumes:
@@ -18,22 +21,24 @@ services:
       KESTRA_CONFIGURATION: |
         datasources:
           postgres:
-            url: jdbc:postgresql://postgres:5432/kestra
+            url: jdbc:postgresql://10.18.112.3:5432/postgres
             driverClassName: org.postgresql.Driver
-            username: kestra
-            password: k3str4
+            username: admin
+            password: pgadmin
         kestra:
           server:
             basicAuth:
-              enabled: false
-              username: "admin@kestra.io" # it must be a valid email address
+              enabled: true
+              username: "allkhush92@gmail.com" # it must be a valid email address
               password: kestra
           repository:
             type: postgres
           storage:
             type: gcs
             gcs:
-              basePath: "/app/storage"
+              bucket: kestra-storage-bucket
+              project-id: newslakehouse
+              serviceAccount: "paste your key.json in single line"
           queue:
             type: postgres
           tasks:
@@ -43,6 +48,3 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-    depends_on:
-      postgres:
-        condition: service_started

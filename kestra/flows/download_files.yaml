@@ -1,0 +1,68 @@
+id: download_data_files
+namespace: newslakehouse
+description: |
+  The flow to extract files into GCS bucket from data source GDELT URL "http://data.gdeltproject.org/gdeltv2"
+
+inputs:
+  - id: filetype
+    type: SELECT
+    displayName: Select file type
+    values: [export, mentions]
+    defaults: export
+
+  - id: year
+    type: SELECT
+    displayName: Select year
+    values: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+    defaults: "2025"
+    allowCustomValue: false
+
+  - id: month
+    type: SELECT
+    displayName: Select month
+    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+    defaults: "01"
+
+  - id: day
+    type: SELECT
+    displayName: Select day
+    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+    defaults: "01"
+
+
+variables:
+  file: "{{inputs.year}}{{inputs.month}}{{inputs.day}}000000.{{inputs.filetype}}.CSV"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/{{vars.file}}"
+  data: "{{outputs.extract.outputFiles[inputs.year ~ inputs.month ~ inputs.day ~ '000000.' ~ inputs.filetype ~ '.CSV']}}" # Hardcoded for midnight only 
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      filetype: "{{inputs.filetype}}"
+
+  - id: extract
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "*.CSV"
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -qO- https://data.gdeltproject.org/gdeltv2/{{render(vars.file)}}.zip | unzip > {{render(vars.file)}}
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    projectId: "{{kv('GCP_PROJECT_ID')}}"
+    serviceAccount: "{{kv('GCP_CREDS')}}"
+    from: "{{render(vars.data)}}"
+    to: "{{render(vars.gcs_file)}}"
+
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      #serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
