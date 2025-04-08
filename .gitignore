@@ -3,3 +3,6 @@ keys/
 
 # Avoid Large files
 terraform/.terraform
+
+# Notebook checkpoints
+.ipynb_checkpoints/
