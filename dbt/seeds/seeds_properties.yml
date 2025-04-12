@@ -1,0 +1,8 @@
+version: 2
+
+seeds:
+  - name: event_codes_lookup
+    description: >
+      Conflict And Mediation Event Observation (CAMEO) codes for the events in GDELT dataset
+      The mapping includes 317 events coded, and not expected to be changed. 
+      Thus added as seed file.
