@@ -1,0 +1,76 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+WITH export_newsdata_clean AS
+(
+    select *,
+        row_number() over (partition by GLOBALEVENTID, SQLDATE) as rn
+    from {{ source('staging','export_newsdata') }}
+)
+SELECT      
+    GLOBALEVENTID,
+    cast(SQLDATE as DATE) as Event_Date,
+    cast(MonthYear as numeric) as MonthYear,
+    cast(`Year` as numeric) as Event_Year,
+    FractionDate,
+    Actor1Code,
+    Actor1Name,
+    Actor1CountryCode,
+    Actor1KnownGroupCode,
+    Actor1EthnicCode,
+    Actor1Religion1Code,
+    Actor1Religion2Code,
+    Actor1Type1Code,
+    Actor1Type2Code,
+    Actor1Type3Code,
+    Actor2Code,
+    Actor2Name,
+    Actor2CountryCode,
+    Actor2KnownGroupCode,
+    Actor2EthnicCode,
+    Actor2Religion1Code,
+    Actor2Religion2Code,
+    Actor2Type1Code,
+    Actor2Type2Code,
+    Actor2Type3Code,
+    IsRootEvent,
+    EventCode,
+    EventBaseCode,
+    EventRootCode,
+    QuadClass,
+    GoldsteinScale,
+    NumMentions,
+    NumSources,
+    NumArticles,
+    AvgTone,
+    Actor1Geo_Type,
+    Actor1Geo_FullName,
+    Actor1Geo_CountryCode,
+    Actor1Geo_ADM1Code,
+    Actor1Geo_ADM2Code,
+    Actor1Geo_Lat,
+    Actor1Geo_Long,
+    Actor1Geo_FeatureID,
+    Actor2Geo_Type,
+    Actor2Geo_FullName,
+    Actor2Geo_CountryCode,
+    Actor2Geo_ADM1Code,
+    Actor2Geo_ADM2Code,
+    Actor2Geo_Lat,
+    Actor2Geo_Long,
+    Actor2Geo_FeatureID,
+    ActionGeo_Type,
+    ActionGeo_FullName,
+    ActionGeo_CountryCode,
+    ActionGeo_ADM1Code,
+    ActionGeo_ADM2Code,
+    ActionGeo_Lat,
+    ActionGeo_Long,
+    ActionGeo_FeatureID,
+    cast(DATEADDED as TIMESTAMP) as Event_Timestamp,
+    SOURCEURL,
+    {{ get_source_domain("SOURCEURL") }} as Source_Domain
+FROM export_newsdata_clean
+WHERE SQLDATE >= Date "2025-04-01" and rn=1

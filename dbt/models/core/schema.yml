@@ -1,22 +1,9 @@
 version: 2
 
-sources:
-  - name: staging
-    database: newslakehouse
-    schema: newslakehouse_dataset
-    tables:
-      - name: export_newsdata
-
 models:
-  - name: stg_export_newsdata
+  - name: facts_events
     description: >
-      GDELT 2.0 debuts what we believe is one of the largest and most ambitious platforms
-      ever created for monitoring our global world. From realtime translation of the world’s 
-      news in 65 languages, to measurement of more than 2,300 emotions and themes from every
-      article, to a massive inventory of the media of the non-Western world, 
-      GDELT 2.0 is poised to redefine how we understand and interact with our global world,
-      transcending language barriers and reaching deeply into the reactions and emotional 
-      resonance of world events.
+      Fact table is created by joining the staging table with the event codes lookup seed.
     columns:
       - name: GLOBALEVENTID
         description: Globally unique identifier assigned to each event record that uniquely identifies it in the master dataset.  NOTE- While these will often be sequential with date, this is NOT always the case and this field should NOT be used to sort events by date- the date fields should be used for this.  NOTE- There is a large gap in the sequence between February 18, 2015 and February 19, 2015 with the switchover to GDELT 2.0 – these are not missing events, the ID sequence was simply reset at a higher number so that it is possible to easily distinguish events created after the switchover to GDELT 2.0 from those created using the older GDELT 1.0 system.
@@ -84,6 +71,13 @@ models:
           - relationships:
               to: ref('event_codes_lookup')
               field: EventCode
+              severity: warn
+      - name: EventDescription
+        description: Type of the Event. Event Codes mapped with event codes lookup.
+        tests:
+          - relationships:
+              to: ref('event_codes_lookup')
+              field: EventDescription
               severity: warn
       - name: EventBaseCode
         description: CAMEO event codes are defined in a three-level taxonomy.  For events at level three in the taxonomy, this yields its level two leaf root node.  For example, code “0251” (“Appeal for easing of administrative sanctions”), would yield an EventBaseCode of “025” (“Appeal to yield”),.  This makes it possible to aggregate events at various resolutions of specificity.  For events at levels two or one, this field will be set to EventCode.  NOTE- it is strongly recommended that this field be stored as a instead of an, since the CAMEO taxonomy can include zero-leaded event codes that can make distinguishing between certain event types more difficult when stored as an.
@@ -158,3 +152,28 @@ models:
               severity: error
       - name: Source_Domain
         description: Domain extracted from the source url
+      - name: CountryCode
+        description: Determining Country mentioned in the event based on CountryCodes of Actor1, Actor2 and Action
+
+  - name: events_analysis
+    columns:
+      - name: GLOBALEVENTID
+        description: Globally unique identifier assigned to each event record that uniquely identifies it in the master dataset.  NOTE- While these will often be sequential with date, this is NOT always the case and this field should NOT be used to sort events by date- the date fields should be used for this.  NOTE- There is a large gap in the sequence between February 18, 2015 and February 19, 2015 with the switchover to GDELT 2.0 – these are not missing events, the ID sequence was simply reset at a higher number so that it is possible to easily distinguish events created after the switchover to GDELT 2.0 from those created using the older GDELT 1.0 system.
+      - name: Event_Date
+        description: Date the event took place in YYYYMMDD format.  See DATEADDED field for YYYYMMDDHHMMSS date.
+      - name: EventDescription
+        description: Type of the Event. Event Codes mapped with event codes lookup.
+      - name: CountryCode
+        description: Determining Country mentioned in the event based on CountryCodes of Actor1, Actor2 and Action
+      - name: Source_Domain
+        description: Domain extracted from the source url
+      - name: Num_of_Articles
+        description: This is the daily total number of source documents containing one or more mentions of this event during the 15 minute update in which it was first seen.  This can be used as a method of assessing the “importance” of an event- the more discussion of that event, the more likely it is to be significant.  The total universe of source documents varies over time, so it is recommended that this field be normalized by the average or other measure of the universe of events during the time period of interest.  NOTE- this field refers only to the first news report to mention an event and is not updated if the event is found in a different context in other news reports.  It is included for legacy purposes – for more precise information on the positioning of an event, see the Mentions table.
+      - name: Num_of_Mentions
+        description: This is the daily total number of mentions of this event across all source documents during the 15 minute update in which it was first seen.  Multiple references to an event within a single document also contribute to this count.  This can be used as a method of assessing the “importance” of an event- the more discussion of that event, the more likely it is to be significant.  The total universe of source documents and the density of events within them vary over time, so it is recommended that this field be normalized by the average or other measure of the universe of events during the time period of interest.  This field is actually a composite score of the total number of raw mentions and the number of mentions extracted from reprocessed versions of each article (see the discussion for the Mentions table),.   NOTE- this field refers only to the first news report to mention an event and is not updated if the event is found in a different context in other news reports.
+      - name: Num_of_Sources
+        description: This is the daily total number of information sources containing one or more mentions of this event.
+      - name: Average_Tone
+        description: This is the daily average “tone” of all documents containing one or more mentions of this event during the 15 minute update in which it was first seen.  The score ranges from -100 (extremely negative), to +100 (extremely positive),.  Common values range between -10 and +10, with 0 indicating neutral.  This can be used as a method of filtering the “context” of events as a subtle measure of the importance of an event and as a proxy for the “impact” of that event.  For example, a riot event with a slightly negative average tone is likely to have been a minor occurrence, whereas if it had an extremely negative average tone, it suggests a far more serious occurrence.  A riot with a positive score likely suggests a very minor occurrence described in the context of a more positive narrative (such as a report of an attack occurring in a discussion of improving conditions on the ground in a country and how the number of attacks per day has been greatly reduced).
+      - name: Avg_Goldstein_Stability
+        description: Daily average Goldstein score of the event. Each CAMEO event code is assigned a numeric score from -10 to +10, capturing the theoretical potential impact that type of event will have on the stability of a country.  This is known as the Goldstein Scale.  This field specifies the Goldstein score for each event type.  NOTE- this score is based on the type of event, not the specifics of the actual event record being recorded – thus two riots, one with 10 people and one with 10,000, will both receive the same Goldstein score.  This can be aggregated to various levels of time resolution to yield an approximation of the stability of a location over time.

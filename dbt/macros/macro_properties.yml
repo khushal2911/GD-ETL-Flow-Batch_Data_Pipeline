@@ -1,0 +1,11 @@
+version: 2
+
+macros:
+  - name: get_source_domain
+    description: >
+      This macro receives a sourceurl and returns the corresponding domain.
+    arguments:
+      - name: sourceurl
+        type: string
+        description: > 
+          Source URL of the event from the GDELT dataset
