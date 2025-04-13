@@ -39,15 +39,16 @@ models:
   newslakehouse:
     # Applies to all files under models/../
     staging:
-      +materialized: table
+      materialized: table
+    core:
+      materialized: table
+
 
 seeds:
-  newslakehouse:  # replace with your actual dbt project name
+  newslakehouse:
     event_codes_lookup:
-      header: true
-      delimiter: ";"
-      quote: '"'
-      column_types:
+      +column_types:
         EventCode: string
         CAMEO: string
+
   
