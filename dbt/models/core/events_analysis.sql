@@ -6,7 +6,7 @@
 
 with analysis_table as
 ( 
-    select * from {{ ref("facts_events") }}
+    select * from {{ ref("fact_events") }}
 )
 select
     GLOBALEVENTID,

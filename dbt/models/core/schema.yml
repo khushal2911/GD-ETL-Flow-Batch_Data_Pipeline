@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: facts_events
+  - name: fact_events
     description: >
       Fact table is created by joining the staging table stg_export_newsdata and the event codes lookup from the seed file.
     columns:
@@ -156,7 +156,9 @@ models:
         description: Determining Country mentioned in the event based on CountryCodes of Actor1, Actor2 and Action
 
   - name: events_analysis
-    description: Analysis table with total number of articles, mentions and sources along with average tone and goldstein score for each event per day
+    description: >
+      Analysis table with total number of articles, mentions and sources along with average tone and goldstein score 
+      for each event. Grouped by Country Code, Source Domain and EventCode
     columns:
       - name: GLOBALEVENTID
         description: Globally unique identifier assigned to each event record that uniquely identifies it in the master dataset.  NOTE- While these will often be sequential with date, this is NOT always the case and this field should NOT be used to sort events by date- the date fields should be used for this.  NOTE- There is a large gap in the sequence between February 18, 2015 and February 19, 2015 with the switchover to GDELT 2.0 – these are not missing events, the ID sequence was simply reset at a higher number so that it is possible to easily distinguish events created after the switchover to GDELT 2.0 from those created using the older GDELT 1.0 system.
