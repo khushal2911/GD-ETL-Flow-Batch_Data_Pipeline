@@ -13,14 +13,20 @@ provider "google" {
   region      = var.region
 }
 
-# Storing extracted datasets from source
-resource "google_storage_bucket" "gdelt_bucket" {
+# datalake
+resource "google_storage_bucket" "gdelt_bucket_1" {
   name          = "${var.project_id}-gdelt-bucket"
   location      = var.location
   storage_class = var.gcs_storage_class
 }
 
-# Final processed dataset in BigQuery
+resource "google_storage_bucket" "gdelt_bucket_2" {
+  name          = "kestra-storage-bucket"
+  location      = var.location
+  storage_class = var.gcs_storage_class
+}
+
+# Dataset schema in BigQuery
 resource "google_bigquery_dataset" "newslakehouse_dataset" {
   dataset_id = var.bq_dataset_name
   location   = var.location
