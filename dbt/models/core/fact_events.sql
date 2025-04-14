@@ -35,9 +35,10 @@ with
         Actor2Type3Code,
         IsRootEvent,
         export_newsdata.EventCode as EventCode,
-        event_lookup.EventDescription as EventDescription,
+        EventCode_lookup.EventDescription as EventCode_type,
         EventBaseCode,
-        EventRootCode,
+        export_newsdata.EventRootCode as EventRootCode,
+        EventRootCode_lookup.EventDescription as EventRootCode_type,
         QuadClass,
         GoldsteinScale,
         NumMentions,
@@ -69,9 +70,11 @@ with
         ActionGeo_Long,
         ActionGeo_FeatureID,
         Event_Timestamp,
-        SOURCEURL, 
+        SOURCEURL,
         Source_Domain,
         Coalesce(Actor1CountryCode, Actor2CountryCode, Actor1Geo_CountryCode, Actor2Geo_CountryCode, ActionGeo_CountryCode, Actor1Geo_FullName, Actor2Geo_FullName, Actor1Geo_ADM1Code, Actor1Geo_ADM2Code, Actor2Geo_ADM1Code, Actor2Geo_ADM2Code, ActionGeo_ADM1Code, ActionGeo_ADM2Code, ActionGeo_FullName) as CountryCode
     from export_newsdata 
-    inner join event_lookup 
-    on export_newsdata.EventCode = event_lookup.EventCode
+    inner join event_lookup as EventCode_lookup
+    on export_newsdata.EventCode = EventCode_lookup.EventCode
+    inner join event_lookup as EventRootCode_lookup
+    on export_newsdata.EventRootCode = EventRootCode_lookup.EventCode
