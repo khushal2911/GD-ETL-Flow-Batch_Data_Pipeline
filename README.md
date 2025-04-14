@@ -2,7 +2,7 @@
 
 [![Made with dbt](https://img.shields.io/badge/dbt-%E2%9C%94%EF%B8%8F-orange)](https://www.getdbt.com/)  
 [![GCP](https://img.shields.io/badge/GCP-BigQuery%20%7C%20Terraform-blue)](https://cloud.google.com/)  
-[![Looker Studio](https://img.shields.io/badge/Dashboard-Live-green)](https://lookerstudio.google.com/s/pCBuHtd99RQ)
+[![Looker Studio](https://img.shields.io/badge/Dashboard-Live-green)](https://lookerstudio.google.com/s/ipIOCCr7PV8)
 
 A scalable batch data pipeline to process **GDELT global events data**, using **BigQuery** as DWH, **Kestra** for workflow orchestration, and **dbt** for transformation — topped with a real-time **Looker Studio dashboard**.
 
