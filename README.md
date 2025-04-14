@@ -25,10 +25,10 @@ A scalable batch data pipeline to process **GDELT global events data**, using **
 
 ```mermaid
 flowchart TD
-    A[Kestra Workflow] --> B[Cloud Storage CSV]
-    B --> C[BigQuery Staging Table]
-    C --> D[dbt Models for fact and dim tables]
-    D --> E[Looker Studio Dashboard]
+    A[🛰️ Kestra Workflow Trigger] --> B[📂 GCS: Data Lake for CSV files ]
+    B --> C[🧮 BigQuery: DWH Schema Generation and insertion - Staging Table ]
+    C --> D[🔧 dbt: Fact & Dimension Models]
+    D --> E[📊 Looker Studio: Interactive Dashboard]
 ```
 
 ---
