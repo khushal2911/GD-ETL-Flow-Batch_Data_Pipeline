@@ -11,7 +11,8 @@ with analysis_table as
 select
     GLOBALEVENTID,
     Event_Date,
-    EventDescription,
+    EventCode_type,
+    EventRootCode_type,
     CountryCode,
     Source_Domain,
     sum(NumArticles) as Num_of_Articles,
@@ -20,4 +21,4 @@ select
     avg(AvgTone) as Average_Tone,
     avg(GoldsteinScale) as Avg_Goldstein_Stability
 from analysis_table
-group by 1,2,3,4,5
+group by 1,2,3,4,5,6

@@ -72,8 +72,8 @@ models:
               to: ref('event_codes_lookup')
               field: EventCode
               severity: warn
-      - name: EventDescription
-        description: Type of the Event. Event Codes mapped with event codes lookup.
+      - name: EventCode_type
+        description: Type of the Event. Event Codes mapped with event codes lookup as per documentation.
         tests:
           - relationships:
               to: ref('event_codes_lookup')
@@ -83,6 +83,13 @@ models:
         description: CAMEO event codes are defined in a three-level taxonomy.  For events at level three in the taxonomy, this yields its level two leaf root node.  For example, code “0251” (“Appeal for easing of administrative sanctions”), would yield an EventBaseCode of “025” (“Appeal to yield”),.  This makes it possible to aggregate events at various resolutions of specificity.  For events at levels two or one, this field will be set to EventCode.  NOTE- it is strongly recommended that this field be stored as a instead of an, since the CAMEO taxonomy can include zero-leaded event codes that can make distinguishing between certain event types more difficult when stored as an.
       - name: EventRootCode
         description: Similar to EventBaseCode, this defines the root-level category the event code falls under.  For example, code “0251” (“Appeal for easing of administrative sanctions”), has a root code of “02” (“Appeal”),.  This makes it possible to aggregate events at various resolutions of specificity.  For events at levels two or one, this field will be set to EventCode.  NOTE- it is strongly recommended that this field be stored as a instead of an, since the CAMEO taxonomy can include zero-leaded event codes that can make distinguishing between certain event types more difficult when stored as an.
+      - name: EventRootCode_type
+        description: Type of the root Event. Event Codes mapped with event codes lookup as per documentation.
+        tests:
+          - relationships:
+              to: ref('event_codes_lookup')
+              field: EventDescription
+              severity: warn
       - name: QuadClass
         description: The entire CAMEO event taxonomy is ultimately organized under four primary classifications- Verbal Cooperation, Material Cooperation, Verbal Conflict, and Material Conflict.  This field specifies this primary classification for the event type, allowing analysis at the highest level of aggregation.  The numeric codes in this field map to the Quad Classes as follows- 1=Verbal Cooperation, 2=Material Cooperation, 3=Verbal Conflict, 4=Material Conflict.
       - name: GoldsteinScale
@@ -164,8 +171,10 @@ models:
         description: Globally unique identifier assigned to each event record that uniquely identifies it in the master dataset.  NOTE- While these will often be sequential with date, this is NOT always the case and this field should NOT be used to sort events by date- the date fields should be used for this.  NOTE- There is a large gap in the sequence between February 18, 2015 and February 19, 2015 with the switchover to GDELT 2.0 – these are not missing events, the ID sequence was simply reset at a higher number so that it is possible to easily distinguish events created after the switchover to GDELT 2.0 from those created using the older GDELT 1.0 system.
       - name: Event_Date
         description: Date the event took place in YYYYMMDD format.  See DATEADDED field for YYYYMMDDHHMMSS date.
-      - name: EventDescription
-        description: Type of the Event. Event Codes mapped with event codes lookup.
+      - name: EventCode_type
+        description: Type of the Event. Event Codes mapped with event codes lookup as per documentation.
+      - name: EventRootCode_type
+        description: Type of the Root Event. Event Codes mapped with event codes lookup as per documentation
       - name: CountryCode
         description: Determining Country mentioned in the event based on CountryCodes of Actor1, Actor2 and Action
       - name: Source_Domain

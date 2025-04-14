@@ -49,6 +49,6 @@ seeds:
     event_codes_lookup:
       +column_types:
         EventCode: string
-        CAMEO: string
+        EventDescription: string
 
   
