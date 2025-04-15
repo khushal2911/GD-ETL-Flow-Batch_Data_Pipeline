@@ -25,10 +25,10 @@ A scalable batch data pipeline to process **GDELT global events data**, using **
 
 ```mermaid
 flowchart TD
-    A[🛰️ Kestra Workflow Trigger] --> B[📂 GCS: Data Lake for CSV files ]
-    B --> C[🧮 BigQuery: DWH Schema Generation and insertion - Staging Table ]
-    C --> D[🔧 dbt: Fact & Dimension Models]
-    D --> E[📊 Looker Studio: Interactive Dashboard]
+    A[![alt text](image.png) Kestra Workflow Trigger] --> B[![alt text](image-1.png) GCS: Data Lake for CSV files ]
+    B --> C[![alt text](image-2.png) BigQuery: DWH Schema Generation and insertion - Staging Table ]
+    C --> D[![alt text](image-3.png) dbt: Fact & Dimension Models]
+    D --> E[![alt text](image-4.png) Looker Studio: Interactive Dashboard]
 ```
 
 ---
@@ -47,7 +47,7 @@ flowchart TD
 
 ## 📊 Insights Delivered
 
-✅ Country-wise volume percentages of Root Event Types and their Sentiments derived using Average Tone
+✅ Country-wise volume percentages of Root Event Types and their Sentiments derived using Average Tone  
 ✅ Number of Mentions of a Country by Root Event Types over a duration
 
 ---
@@ -94,7 +94,8 @@ sudo docker compose up
 
 #### 🔹 Configure and execute the `data_insert_to_BigQuery` Flow
 
-1. Modify the cron trigger to the desired date schedule (e.g., `"/15 * 15 * *"` to run every 15 minutes on the 15th day of any month)
+1. Modify the cron trigger to the desired date schedule 
+    - e.g. `"/15 * 15 * *"` to run every 15 minutes on the 15th day of every month
 
 2. Use the backfill feature to include the trigger date:
     - Set appropriate start and end timestamps
@@ -105,7 +106,6 @@ sudo docker compose up
     - Insert the data into the BigQuery table `export_newsdata` in the `newslakehouse_dataset`
 
 #### 🔹 Create DBT Models with 'dbt_bq_flow'
-
 1. Execute `dbt_bq_flow` to build data models described previously [DBT Models](#dbt-models).
 
 ## 🔗 **Live Dashboard:**
